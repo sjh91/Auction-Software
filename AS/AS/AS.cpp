@@ -20,8 +20,8 @@ public:
 	
 	void setPersonName(std::string x) {  personName= x; }
 	void setAddress(std::string x) { Address = x; }
-	void setPhoneNumber(long x) { phoneNumber = x; }
 	void setAuctionNumber(long x) { auctionNumber = x; }
+	void setPhoneNumber(long x) { phoneNumber = x; }
 	
 	std::string getPersonName(){return personName;}
 	std::string getAddress(){return Address;}
@@ -90,8 +90,10 @@ void addBuyer()
 	P->setPhoneNumber(tempLong);
 	
 		buyers << P->getPersonName() << " " << P->getAddress() << " " << P->getAuctionNumber() << " " << P->getPhoneNumber() << std::endl;
-	buyers.close();
+	
+		buyers.close();
 
+		return;
 }
 
 void addSeller()
