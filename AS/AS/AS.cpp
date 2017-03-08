@@ -7,7 +7,6 @@
 #include <fstream>
 
 //Globals: 
- person * P;
 
 //std::string personName;
 //std::string address;
@@ -19,18 +18,25 @@ public:
 	person() {}
 	~person() {}
 	
-	std:string getPersonName(){return personName;}
-	std:string getAddress(){return address;}
-	std:string getAuctionNumber(){return auctionNumber;}
-	std:string getPhoneNumber(){return phoneNumber;}
+	void setPersonName(std::string x) {  personName= x; }
+	void setAddress(std::string x) { Address = x; }
+	void setPhoneNumber(long x) { phoneNumber = x; }
+	void setAuctionNumber(long x) { auctionNumber = x; }
+	
+	std::string getPersonName(){return personName;}
+	std::string getAddress(){return Address;}
+	long getAuctionNumber(){return auctionNumber;}
+	long getPhoneNumber(){return phoneNumber;}
 	
 	
 private:
 	std::string personName; 
 	std::string Address; 
 	long auctionNumber; 
+	long phoneNumber;
 
 };
+person * P;
 class product 
 {
 public:
@@ -49,11 +55,12 @@ private:
 	std::string cropType;
 	long auctionNumber;
 	
-}
+};
 void addBuyer()
 {
 	P = new person();
-	std:string temp;
+	std::string temp;
+	long tempLong;
 	
 	
 	std::ofstream buyers;
@@ -75,14 +82,14 @@ void addBuyer()
 	P->setAddress(temp);
 		
 	std::cout << "Enter Buyers Auction Number" << std::endl;
-	getline(std::cin, temp);
-	P->setAuctionNumber(temp);
+	std::cin >>tempLong;
+	P->setAuctionNumber(tempLong);
 	
 	std::cout << "Enter Buyers Phone Number" << std::endl;
-	getline(std::cin, temp);
-	P->setPhoneNumber(temp);
+	std::cin >> tempLong;
+	P->setPhoneNumber(tempLong);
 	
-		buyers << P->personName << " " << P->address << " " << P->auctionNumber << " " << P->phoneNumber << std::endl;
+		buyers << P->getPersonName() << " " << P->getAddress() << " " << P->getAuctionNumber() << " " << P->getPhoneNumber() << std::endl;
 	buyers.close();
 
 }
@@ -90,13 +97,14 @@ void addBuyer()
 void addSeller()
 {
 	P = new person();
-	std:string temp;
-	
-	
+	std::string temp;
+	long tempLong;
+
+
 	std::ofstream sellers;
 	sellers.open("sellers.txt", std::ios::app);
-		
-	if (buyers.fail())
+
+	if (sellers.fail())
 	{
 		std::cout << "Error opening File" << std::endl;
 		return;
@@ -106,24 +114,24 @@ void addSeller()
 	std::cin.ignore();
 	getline(std::cin, temp);
 	P->setPersonName(temp);
-	
+
 	std::cout << "Enter Seller Address" << std::endl;
 	getline(std::cin, temp);
 	P->setAddress(temp);
-		
-	std::cout << "Enter Seller Auction Number" << std::endl;
-	getline(std::cin, temp);
-	P->setAuctionNumber(temp);
-	
-	std::cout << "Enter Seller Phone Number" << std::endl;
-	getline(std::cin, temp);
-	P->setPhoneNumber(temp);
-	
-	//write to file
-	sellers << P->personName << " " << P->address << " " << P->auctionNumber << " " << P->phoneNumber << std::endl;
-	
-	sellers.close();
 
+	std::cout << "Enter Seller Auction Number" << std::endl;
+	std::cin >>tempLong;
+	P->setAuctionNumber(tempLong);
+
+	std::cout << "Enter Seller Phone Number" << std::endl;
+	std::cin >> tempLong;
+	P->setPhoneNumber(tempLong);
+
+	//write to file
+	//sellers << P->personName << " " << P->address << " " << P->auctionNumber << " " << P->phoneNumber << std::endl;
+
+	sellers.close();
+}
 
 int main()
 {
