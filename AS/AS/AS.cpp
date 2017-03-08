@@ -15,6 +15,7 @@
 class person
 {
 public:
+
 	person() {}
 	~person() {}
 	
@@ -30,32 +31,41 @@ public:
 	
 	
 private:
+
 	std::string personName; 
 	std::string Address; 
 	long auctionNumber; 
 	long phoneNumber;
 
 };
+//Global
 person * P;
 class product 
 {
 public:
+
 	product(){}
 	~product(){}
+
 // Accessor Functions 
+	void setCropType(std::string x) { cropType = x; }
+	void setQuantity(double x) { quantity = x; }
 	void setPrice(double x){price = x; }
-	void setQuantity(double x){quantity = x; }
-	void setCropType(std::string x){cropType=x; }
-	void setAuctionNumber(long x){auctionNumber=x; }
+	void setSellerNumber(long x){sellerNumber=x; }
+	void setBuyerNumber(long x) { buyerNumber = x; }
 	
-	
+	std::string getCropType() { return cropType; }
 private:
+
 	double price;
 	double quantity;
 	std::string cropType;
-	long auctionNumber;
+	long sellerNumber;
+	long buyerNumber;
 	
 };
+//Global
+product * Prod;
 void addBuyer()
 {
 	P = new person();
@@ -130,17 +140,58 @@ void addSeller()
 	P->setPhoneNumber(tempLong);
 
 	//write to file
-	//sellers << P->personName << " " << P->address << " " << P->auctionNumber << " " << P->phoneNumber << std::endl;
+	sellers << P->getPersonName() << " " << P->getAddress() << " " << P->getAuctionNumber() << " " << P->getPhoneNumber() << std::endl;
 
 	sellers.close();
 }
 
+void addCrop()
+{
+
+	Prod = new product();
+	std::string temp; // string of item sold
+	double tempDouble; // used for price and quantity
+	long tempLong; // used for numbers of buyers and sellers
+
+	std::ofstream marketData;
+	marketData.open("marketdata.txt", std::ios::app);
+	if (marketData.fail())
+	{
+		std::cout << "Error opening Market Data file." << std::endl;
+		return;
+	}
+
+	std::cout << "Enter type of produce sold" << std::endl;
+	std::cin.ignore();
+	getline(std::cin, temp);
+	Prod->setCropType(temp);
+	
+	std::cout << "Enter quantity sold" << std::endl;
+	std::cin >> tempDouble;
+	Prod->setQuantity(tempDouble);
+
+	std::cout << "Enter price of goods sold" << std::endl;
+	std::cin >> tempDouble;
+	Prod->setPrice(tempDouble);
+
+	std::cout << "Enter Seller Number" << std::endl;
+	std::cin >> tempLong;
+	Prod->setSellerNumber(tempLong);
+
+	std::cout << "Enter Buyer Number" << std::endl;
+	std::cin >> tempLong;
+	Prod->setBuyerNumber(tempLong);
+
+	marketData << Prod->getCropType() Prod->getQuantity()
+}
 int main()
 {
 	std::string name;
 	std::string address;
 	long number;
 	char choice[10];
+
+
 	while (choice[0] != 'q')
 	{
 		std::cout << "|----------Menu---------------|" << std::endl;
@@ -154,9 +205,10 @@ int main()
 		switch (choice[0])
 		{
 		case 'B': addBuyer(); break;
-		case 'S': addBuyer(); break;
-		case 'C': addBuyer(); break;
-		case 'I': addBuyer(); break;
+		case 'S': addSeller(); break;
+		case 'C': addCrop(); break;
+		//TODO:case 'I': makeInvoice(); break;
+		//TODO Generate market Report
 
 		}
 	}
