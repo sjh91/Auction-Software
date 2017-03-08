@@ -34,9 +34,28 @@ private:
 	std::string personName; 
 	std::string Address; 
 	long auctionNumber; 
+	long phoneNumber;
 
 };
-
+class product 
+{
+public:
+	product(){}
+	~product(){}
+// Accessor Functions 
+	void setPrice(double x){price = x; }
+	void setQuantity(double x){quantity = x; }
+	void setCropType(std::string x){cropType=x; }
+	void setAuctionNumber(long x){auctionNumber=x; }
+	
+	
+private:
+	double price;
+	double quantity;
+	std::string cropType;
+	long auctionNumber;
+	
+}
 void addBuyer()
 {
 	P = new person();
