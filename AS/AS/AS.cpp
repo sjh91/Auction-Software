@@ -6,7 +6,8 @@
 #include <iostream>
 #include <fstream>
 
-//Globals:
+//Globals: 
+ person * P;
 
 //std::string personName;
 //std::string address;
@@ -18,24 +19,49 @@ public:
 	person() {}
 	~person() {}
 //Accessor Functions 
-	void setPersonName(std::string x) { personName = x; }
-	void setAddress(std::string x) { address = x; }
-	void setauctionNumber(std::string x) { auctionNumber = x; }
-	void setphoneNumber(std::string x) { phoneNumber = x; }
-	std::string getPersonName() { return personName; }
-	std::string getAddress() { return address; }
-	std::string getAuctionNumber() { return auctionNumber; }
-	std::string getPhoneNumber() { return phoneNumber; }
-
+	void setPersonName(std::string x) {personName = x;}
+	void setAddress(std::string x) {address = x;}
+	void setAuctionNumber(std::string x) {auctionNumber = x;}
+	void setPhoneNumber(std::string x) {phoneNumber = x;}
+	
+	std:string getPersonName(){return personName;}
+	std:string getAddress(){return address;}
+	std:string getAuctionNumber(){return auctionNumber;}
+	std:string getPhoneNumber(){return phoneNumber;}
+	
+	
 private:
 	std::string personName; 
-	std::string address; 
-	std::string auctionNumber; 
-	std::string phoneNumber;
-};
+	std::string Address; 
+	long auctionNumber; 
+	long phoneNumber;
 
+};
+class product 
+{
+public:
+	product(){}
+	~product(){}
+// Accessor Functions 
+	void setPrice(double x){price = x; }
+	void setQuantity(double x){quantity = x; }
+	void setCropType(std::string x){cropType=x; }
+	void setAuctionNumber(long x){auctionNumber=x; }
+	
+	
+private:
+	double price;
+	double quantity;
+	std::string cropType;
+	long auctionNumber;
+	
+}
 void addBuyer()
 {
+	P = new person();
+	std:string temp;
+	
+	
 	std::ofstream buyers;
 	buyers.open("buyers.txt", std::ios::app);
 		
@@ -47,29 +73,63 @@ void addBuyer()
 
 	std::cout << "Enter Buyers Name" << std::endl;
 	std::cin.ignore();
-	getline(std::cin, personName);
-
-	std::cout << "Enter Buyers Address" << std::endl;
-	getline(std::cin, address);
+	getline(std::cin, temp);
+	P->setPersonName(temp);
 	
+	std::cout << "Enter Buyers Address" << std::endl;
+	getline(std::cin, temp);
+	P->setAddress(temp);
+		
 	std::cout << "Enter Buyers Auction Number" << std::endl;
-	getline(std::cin, auctionNumber);
+	getline(std::cin, temp);
+	P->setAuctionNumber(temp);
 	
 	std::cout << "Enter Buyers Phone Number" << std::endl;
-	getline(std::cin, phoneNumber);
+	getline(std::cin, temp);
+	P->setPhoneNumber(temp);
 	
-		buyers << personName << " " << address << " " << auctionNumber << " " << phoneNumber << std::endl;
+		buyers << P->personName << " " << P->address << " " << P->auctionNumber << " " << P->phoneNumber << std::endl;
 	buyers.close();
 
 }
 
-struct seller 
+void addSeller()
 {
-	std::string Name;
-	std::string Address;
-	long auctionNumber;
+	P = new person();
+	std:string temp;
+	
+	
+	std::ofstream sellers;
+	sellers.open("sellers.txt", std::ios::app);
+		
+	if (buyers.fail())
+	{
+		std::cout << "Error opening File" << std::endl;
+		return;
+	}
 
-};
+	std::cout << "Enter Sellers Name" << std::endl;
+	std::cin.ignore();
+	getline(std::cin, temp);
+	P->setPersonName(temp);
+	
+	std::cout << "Enter Seller Address" << std::endl;
+	getline(std::cin, temp);
+	P->setAddress(temp);
+		
+	std::cout << "Enter Seller Auction Number" << std::endl;
+	getline(std::cin, temp);
+	P->setAuctionNumber(temp);
+	
+	std::cout << "Enter Seller Phone Number" << std::endl;
+	getline(std::cin, temp);
+	P->setPhoneNumber(temp);
+	
+	//write to file
+	sellers << P->personName << " " << P->address << " " << P->auctionNumber << " " << P->phoneNumber << std::endl;
+	
+	sellers.close();
+
 
 int main()
 {
