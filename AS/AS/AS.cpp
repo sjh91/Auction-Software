@@ -19,7 +19,7 @@ struct buyer
 void addBuyer(std::string name, std::string address, long buyerNumber)
 {
 	std::ofstream buyers;
-	buyers.open("sellers.txt");
+	buyers.open("buyers.txt", std::ios::app);
 		
 	if (buyers.fail())
 	{
@@ -27,7 +27,7 @@ void addBuyer(std::string name, std::string address, long buyerNumber)
 		return;
 	}
 
-	buyers << name << address << buyerNumber << std::endl;
+	buyers << name << " " << address << " " << buyerNumber << std::endl;
 	buyers.close();
 
 }
@@ -44,32 +44,17 @@ int main()
 {
 	std::string name;
 	std::string address;
-	std::string number;
-	int task = 0;
-	while (task != 10)
+	long number;
+	char choice[10];
+	while (choice[0] != 'q')
 	{
-		std::cout << "1.Press 1 to add new seller" << std::endl;
-		std::cout << "2.Press 2 to add new item" << std::endl;
-		std::cout << "3.Press 3 to add new buyer" << std::endl;
-		std::cout << "4.Press 10 to exit" << std::endl;
-		
-		std::cin >> task;
+		std::cout << "|----------Menu---------------|" << std::endl;
+		std::cout << "|----------Add Buyer----------|" << std::endl;
+		std::cout << "|----------Add Seller---------|" << std::endl;
+		std::cout << "|----------Add Crop-----------|" << std::endl;
+		std::cout << "|----------Create Invoice-----|" << std::endl;
 
-		if (task == 1)
-		{
-			std::cout << "adding to buyer list";
-			std::cin >> name;
-			std::cin >> address;
-			std::cin >> number;
-		}
-		//else if(task == "2")
-			//return
-		//else if(task == "3")
-			//return
-		//else if(task == "4")
-
-		//if(task == "5")
-
+		std::cin >> choice[0];
 	}
     return 0;
 }
