@@ -18,11 +18,6 @@ class person
 public:
 	person() {}
 	~person() {}
-//Accessor Functions 
-	void setPersonName(std::string x) {personName = x;}
-	void setAddress(std::string x) {address = x;}
-	void setAuctionNumber(std::string x) {auctionNumber = x;}
-	void setPhoneNumber(std::string x) {phoneNumber = x;}
 	
 	std:string getPersonName(){return personName;}
 	std:string getAddress(){return address;}
@@ -34,7 +29,6 @@ private:
 	std::string personName; 
 	std::string Address; 
 	long auctionNumber; 
-	long phoneNumber;
 
 };
 class product 
