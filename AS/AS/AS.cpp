@@ -8,21 +8,30 @@
 
 //Globals:
 
-std::string personName;
-std::string address;
-std::string auctionNumber;
-std::string phoneNumber;
+//std::string personName;
+//std::string address;
+//std::string auctionNumber;
+//std::string phoneNumber;
 class person
 {
 public:
 	person() {}
 	~person() {}
-	
+//Accessor Functions 
+	void setPersonName(std::string x) { personName = x; }
+	void setAddress(std::string x) { address = x; }
+	void setauctionNumber(std::string x) { auctionNumber = x; }
+	void setphoneNumber(std::string x) { phoneNumber = x; }
+	std::string getPersonName() { return personName; }
+	std::string getAddress() { return address; }
+	std::string getAuctionNumber() { return auctionNumber; }
+	std::string getPhoneNumber() { return phoneNumber; }
+
 private:
 	std::string personName; 
-	std::string Address; 
-	long auctionNumber; 
-
+	std::string address; 
+	std::string auctionNumber; 
+	std::string phoneNumber;
 };
 
 void addBuyer()
