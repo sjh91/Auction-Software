@@ -6,17 +6,26 @@
 #include <iostream>
 #include <fstream>
 
-//using namespace std;
-struct buyer
-{
+//Globals:
 
-	std::string Name; 
+std::string personName;
+std::string address;
+std::string auctionNumber;
+std::string phoneNumber;
+class person
+{
+public:
+	person() {}
+	~person() {}
+	
+private:
+	std::string personName; 
 	std::string Address; 
 	long auctionNumber; 
 
 };
 
-void addBuyer(std::string name, std::string address, long buyerNumber)
+void addBuyer()
 {
 	std::ofstream buyers;
 	buyers.open("buyers.txt", std::ios::app);
@@ -27,7 +36,20 @@ void addBuyer(std::string name, std::string address, long buyerNumber)
 		return;
 	}
 
-	buyers << name << " " << address << " " << buyerNumber << std::endl;
+	std::cout << "Enter Buyers Name" << std::endl;
+	std::cin.ignore();
+	getline(std::cin, personName);
+
+	std::cout << "Enter Buyers Address" << std::endl;
+	getline(std::cin, address);
+	
+	std::cout << "Enter Buyers Auction Number" << std::endl;
+	getline(std::cin, auctionNumber);
+	
+	std::cout << "Enter Buyers Phone Number" << std::endl;
+	getline(std::cin, phoneNumber);
+	
+		buyers << personName << " " << address << " " << auctionNumber << " " << phoneNumber << std::endl;
 	buyers.close();
 
 }
@@ -49,12 +71,21 @@ int main()
 	while (choice[0] != 'q')
 	{
 		std::cout << "|----------Menu---------------|" << std::endl;
-		std::cout << "|----------Add Buyer----------|" << std::endl;
-		std::cout << "|----------Add Seller---------|" << std::endl;
-		std::cout << "|----------Add Crop-----------|" << std::endl;
-		std::cout << "|----------Create Invoice-----|" << std::endl;
+		std::cout << "|----------Add (B)uyer----------|" << std::endl;
+		std::cout << "|----------Add (S)eller---------|" << std::endl;
+		std::cout << "|----------Add (C)rop-----------|" << std::endl;
+		std::cout << "|----------Create (I)nvoice-----|" << std::endl;
 
 		std::cin >> choice[0];
+
+		switch (choice[0])
+		{
+		case 'B': addBuyer(); break;
+		case 'S': addBuyer(); break;
+		case 'C': addBuyer(); break;
+		case 'I': addBuyer(); break;
+
+		}
 	}
     return 0;
 }
