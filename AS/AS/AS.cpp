@@ -55,6 +55,11 @@ public:
 	void setBuyerNumber(long x) { buyerNumber = x; }
 	
 	std::string getCropType() { return cropType; }
+	double getQuantity() { return quantity; }
+	double getPrice() { return price; }
+	long getSellerNumber() { return sellerNumber; }
+	long getBuyerNumber() { return buyerNumber; }
+
 private:
 
 	double price;
@@ -182,7 +187,9 @@ void addCrop()
 	std::cin >> tempLong;
 	Prod->setBuyerNumber(tempLong);
 
-	marketData << Prod->getCropType() Prod->getQuantity()
+	marketData << Prod->getCropType() << " " << Prod->getQuantity() << " " << Prod->getPrice() << " " << Prod->getBuyerNumber() << " " << Prod->getSellerNumber() << std::endl;
+
+	marketData.close();
 }
 int main()
 {
