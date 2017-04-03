@@ -1,6 +1,7 @@
 // AS.cpp : Defines the entry point for the console application.
 //Sam Hardy
 //sjh91@zips.uakron.edu;
+// test1
 
 #include "stdafx.h"
 #include <string>
