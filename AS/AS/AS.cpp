@@ -19,44 +19,44 @@ public:
 
 	person() {}
 	~person() {}
-	
-	void setPersonName(std::string x) {  personName= x; }
+
+	void setPersonName(std::string x) { personName = x; }
 	void setAddress(std::string x) { Address = x; }
 	void setAuctionNumber(std::string x) { auctionNumber = x; }
 	void setPhoneNumber(std::string x) { phoneNumber = x; }
-	
-	std::string getPersonName(){return personName;}
-	std::string getAddress(){return Address;}
-	std::string getAuctionNumber(){return auctionNumber;}
-	std::string getPhoneNumber(){return phoneNumber;}
-	
-	
+
+	std::string getPersonName() { return personName; }
+	std::string getAddress() { return Address; }
+	std::string getAuctionNumber() { return auctionNumber; }
+	std::string getPhoneNumber() { return phoneNumber; }
+
+
 private:
 
-	std::string personName; 
-	std::string Address; 
-	std::string auctionNumber; 
+	std::string personName;
+	std::string Address;
+	std::string auctionNumber;
 	std::string phoneNumber;
 
 };
 //Global
 person * P;
 
-class product 
+class product
 {
 
 public:
 
-	product(){}
-	~product(){}
+	product() {}
+	~product() {}
 
-// Accessor Functions 
+	// Accessor Functions 
 	void setCropType(std::string x) { cropType = x; }
 	void setQuantity(double x) { quantity = x; }
-	void setPrice(double x){price = x; }
-	void setSellerNumber(long x){sellerNumber=x; }
+	void setPrice(double x) { price = x; }
+	void setSellerNumber(long x) { sellerNumber = x; }
 	void setBuyerNumber(long x) { buyerNumber = x; }
-	
+
 	std::string getCropType() { return cropType; }
 	double getQuantity() { return quantity; }
 	double getPrice() { return price; }
@@ -70,7 +70,7 @@ private:
 	std::string cropType;
 	std::string sellerNumber;
 	std::string buyerNumber;
-	
+
 };
 //Global
 product * Prod;
@@ -81,11 +81,11 @@ void addBuyer()
 	P = new person();
 	std::string temp;
 
-	
-	
+
+
 	std::ofstream buyers;
 	buyers.open("buyers.txt", std::ios::app);
-		
+
 	if (buyers.fail())
 	{
 		std::cout << "Error opening File" << std::endl;
@@ -96,24 +96,24 @@ void addBuyer()
 	std::cin.ignore();
 	getline(std::cin, temp);
 	P->setPersonName(temp);
-	
+
 	std::cout << "Enter Buyers Address" << std::endl;
 	getline(std::cin, temp);
 	P->setAddress(temp);
-		
+
 	std::cout << "Enter Buyers Auction Number" << std::endl;
 	getline(std::cin, temp);
 	P->setAuctionNumber(temp);
-	
+
 	std::cout << "Enter Buyers Phone Number" << std::endl;
 	getline(std::cin, temp);
 	P->setPhoneNumber(temp);
-	
-		buyers << P->getPersonName() << " " << P->getAddress() << " " << P->getAuctionNumber() << " " << P->getPhoneNumber() << std::endl;
-	
-		buyers.close();
 
-		return;
+	buyers << P->getPersonName() << " " << P->getAddress() << " " << P->getAuctionNumber() << " " << P->getPhoneNumber() << std::endl;
+
+	buyers.close();
+
+	return;
 }
 // adds sellers seller file with their info
 void addSeller()
@@ -175,7 +175,7 @@ void addCrop()
 	std::cin.ignore();
 	getline(std::cin, temp);
 	Prod->setCropType(temp);
-	
+
 	std::cout << "Enter quantity sold" << std::endl;
 	std::cin >> tempDouble;
 	Prod->setQuantity(tempDouble);
@@ -193,7 +193,7 @@ void addCrop()
 	Prod->setBuyerNumber(tempLong);
 
 	// ? can I do this?
-	marketData << "'" << Prod->getCropType() << "' '" << Prod->getQuantity() << "' '" << Prod->getPrice() << "' '" << Prod->getBuyerNumber() << "' '" << Prod->getSellerNumber()<<"'" << std::endl;
+	marketData << "'" << Prod->getCropType() << "' '" << Prod->getQuantity() << "' '" << Prod->getPrice() << "' '" << Prod->getBuyerNumber() << "' '" << Prod->getSellerNumber() << "'" << std::endl;
 
 	marketData.close();
 }
@@ -244,10 +244,11 @@ int main()
 		case 'C': addCrop(); break;
 		case 'I': makeInvoice(); break;
 			// todo make sellerinvoice
-		//TODO Generate market Report
+			//TODO Generate market Report
 
 		}
 	}
-    return 0;
+	return 0;
 }
+
 
