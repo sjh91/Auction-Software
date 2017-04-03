@@ -1,12 +1,14 @@
 // AS.cpp : Defines the entry point for the console application.
 //Sam Hardy
 //sjh91@zips.uakron.edu;
-// test1
 
 #include "stdafx.h"
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <sstream>
+#include <vector>
+#include <template>
 
 //Globals: 
 
@@ -55,8 +57,8 @@ public:
 	void setCropType(std::string x) { cropType = x; }
 	void setQuantity(double x) { quantity = x; }
 	void setPrice(double x) { price = x; }
-	void setSellerNumber(long x) { sellerNumber = x; }
-	void setBuyerNumber(long x) { buyerNumber = x; }
+	void setSellerNumber(std::string x) { sellerNumber = x; }
+	void setBuyerNumber(std::string x) { buyerNumber = x; }
 
 	std::string getCropType() { return cropType; }
 	double getQuantity() { return quantity; }
@@ -76,6 +78,46 @@ private:
 //Global
 product * Prod;
 
+class CSVRow
+{
+public:
+	std::string const& operator[](std::size_t index) const
+	{
+		return m_data[index];
+	}
+	std::size_t size() const
+	{
+		return m_data.size();
+	}
+	void readNextRow(std::istream& str)
+	{
+		std::string line;
+		std::getline(str, line);
+
+		std::stringstream lineStream(line);
+		std::string cell;
+
+		m_data.clear();
+		while (std::getline(lineStream, cell, ','))
+		{
+			m_data.push_back(cell);
+		}
+		// This checks for a trailing comma with no data after it.
+		if (!lineStream && cell.empty())
+		{
+			// If there was a trailing comma then add an empty element.
+			m_data.push_back("");
+		}
+	}
+private:
+	std::vector<std::string>    m_data;
+};
+
+std::istream& operator >> (std::istream& str, CSVRow& data)
+{
+	data.readNextRow(str);
+	return str;
+}
 // adds buyers to buyer file with their info
 void addBuyer()
 {
@@ -85,7 +127,7 @@ void addBuyer()
 
 
 	std::ofstream buyers;
-	buyers.open("buyers.txt", std::ios::app);
+	buyers.open("buyers.csv", std::ios::app);
 
 	if (buyers.fail())
 	{
@@ -110,7 +152,7 @@ void addBuyer()
 	getline(std::cin, temp);
 	P->setPhoneNumber(temp);
 
-	buyers << P->getPersonName() << " " << P->getAddress() << " " << P->getAuctionNumber() << " " << P->getPhoneNumber() << std::endl;
+	buyers << P->getPersonName() << "," << P->getAddress() << "," << P->getAuctionNumber() << "," << P->getPhoneNumber() << std::endl;
 
 	buyers.close();
 
@@ -119,12 +161,13 @@ void addBuyer()
 // adds sellers seller file with their info
 void addSeller()
 {
+	char comma = ',';
 	P = new person();
 	std::string temp;
 
 
 	std::ofstream sellers;
-	sellers.open("sellers.txt", std::ios::app);
+	sellers.open("sellers.csv", std::ios::app);
 
 	if (sellers.fail())
 	{
@@ -150,7 +193,7 @@ void addSeller()
 	P->setPhoneNumber(temp);
 
 	//write to file
-	sellers << P->getPersonName() << " " << P->getAddress() << " " << P->getAuctionNumber() << " " << P->getPhoneNumber() << std::endl;
+	sellers << P->getPersonName() << "," << P->getAddress() << "," << P->getAuctionNumber() << "," << P->getPhoneNumber() << std::endl;
 
 	sellers.close();
 	return; // 
@@ -162,10 +205,9 @@ void addCrop()
 	Prod = new product();
 	std::string temp; // string of item sold
 	double tempDouble; // used for price and quantity
-	long tempLong; // used for numbers of buyers and sellers
 
 	std::ofstream marketData;
-	marketData.open("marketdata.txt", std::ios::app);
+	marketData.open("marketdata.csv", std::ios::app);
 	if (marketData.fail())
 	{
 		std::cout << "Error opening Market Data file." << std::endl;
@@ -186,15 +228,14 @@ void addCrop()
 	Prod->setPrice(tempDouble);
 
 	std::cout << "Enter Seller Number" << std::endl;
-	std::cin >> tempLong;
-	Prod->setSellerNumber(tempLong);
+	std::cin >> temp;
+	Prod->setSellerNumber(temp);
 
 	std::cout << "Enter Buyer Number" << std::endl;
-	std::cin >> tempLong;
-	Prod->setBuyerNumber(tempLong);
+	std::cin >> temp;
+	Prod->setBuyerNumber(temp);
 
-	// ? can I do this?
-	marketData << "'" << Prod->getCropType() << "' '" << Prod->getQuantity() << "' '" << Prod->getPrice() << "' '" << Prod->getBuyerNumber() << "' '" << Prod->getSellerNumber() << "'" << std::endl;
+	marketData << Prod->getCropType() << "," << Prod->getQuantity() << "," << Prod->getPrice() << "," << Prod->getBuyerNumber() << "," << Prod->getSellerNumber() << "," << std::endl;
 
 	marketData.close();
 }
@@ -205,23 +246,35 @@ void makeInvoice()
 	std::cout << "What is the buyers number" << std::endl;
 	std::cin >> buyerNumber;
 	std::ifstream marketData;
-	marketData.open("marketdata.txt");
+	marketData.open("marketdata.csv");
 
-	std::string text{ std::istreambuf_iterator<char>(marketData), std::istreambuf_iterator<char>() };
-	std::string::iterator first = text.begin();
-	std::string::iterator last = text.end();
+	//std::string text{ std::istreambuf_iterator<char>(marketData), std::istreambuf_iterator<char>() };
+	//std::string::iterator first = text.begin();
+	//std::string::iterator last = text.end();
 
 	if (marketData.fail())
 	{
-		std::cout << "File could not be opened, it may not exist yet";
+		std::cout << "File could not be opened, it may not exist yet or may be open";
 		return;
+	}
+	
+	CSVRow row;
+	while (!marketData.eof())
+	{
+		while (marketData >> row)
+		{
+			
+			if (row[3] == buyerNumber) {
+			
+
+			}
+
+		}
 	}
 	//TODO: make the file find all lines where the buyers number is present 
 	//copy only that data to a new file
 	// calculate Total and Prices
 
-
-}
 int main()
 {
 
@@ -251,5 +304,4 @@ int main()
 	}
 	return 0;
 }
-
 
