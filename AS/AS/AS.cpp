@@ -8,7 +8,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
-#include <template>
+
 
 //Globals: 
 
@@ -242,11 +242,17 @@ void addCrop()
 
 void makeInvoice()
 {
+	double price = 0;
+	double totalAmount = 0;
 	std::string buyerNumber;
 	std::cout << "What is the buyers number" << std::endl;
 	std::cin >> buyerNumber;
+
 	std::ifstream marketData;
 	marketData.open("marketdata.csv");
+
+	std::ofstream invoice;
+	invoice.open("invoice.csv");
 
 	//std::string text{ std::istreambuf_iterator<char>(marketData), std::istreambuf_iterator<char>() };
 	//std::string::iterator first = text.begin();
@@ -257,23 +263,29 @@ void makeInvoice()
 		std::cout << "File could not be opened, it may not exist yet or may be open";
 		return;
 	}
-	
+
 	CSVRow row;
 	while (!marketData.eof())
 	{
 		while (marketData >> row)
 		{
-			
-			if (row[3] == buyerNumber) {
-			
+			//sort for buyer number
+			if (row[3] == buyerNumber)
 
+			{
+				price = stod(row[1])*stod(row[2]);
+				totalAmount += price;
+				invoice << row[0] << "," << row[4] << "," << row[1] << "," << row[2] << "," << "$:"<< price << "," << std::endl;
 			}
-
 		}
+		invoice << "," << "," << "," << "," << "Total:"<<totalAmount << std::endl;
 	}
 	//TODO: make the file find all lines where the buyers number is present 
 	//copy only that data to a new file
 	// calculate Total and Prices
+	invoice.close();
+	marketData.close();
+}
 
 int main()
 {
