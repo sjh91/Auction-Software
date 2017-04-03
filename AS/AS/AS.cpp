@@ -10,6 +10,7 @@
 #include <vector>
 
 
+
 //Globals: 
 
 //std::string personName;
@@ -57,7 +58,7 @@ public:
 	void setCropType(std::string x) { cropType = x; }
 	void setQuantity(double x) { quantity = x; }
 	void setPrice(double x) { price = x; }
-	void setSellerNumber(std::string x) { sellerNumber = x; }
+	void setSellerNumber(std::string x) { sellerNumber= x; }
 	void setBuyerNumber(std::string x) { buyerNumber = x; }
 
 	std::string getCropType() { return cropType; }
@@ -114,7 +115,7 @@ private:
 };
 
 std::istream& operator >> (std::istream& str, CSVRow& data)
-{
+{	
 	data.readNextRow(str);
 	return str;
 }
@@ -158,7 +159,7 @@ void addBuyer()
 
 	return;
 }
-// adds sellers seller file with their info
+// adds seller to file with their info
 void addSeller()
 {
 	char comma = ',';
@@ -240,10 +241,11 @@ void addCrop()
 	marketData.close();
 }
 
-void makeInvoice()
+void makeBuyerInvoice()
 {
 	double price = 0;
 	double totalAmount = 0;
+
 	std::string buyerNumber;
 	std::cout << "What is the buyers number" << std::endl;
 	std::cin >> buyerNumber;
@@ -254,17 +256,19 @@ void makeInvoice()
 	std::ofstream invoice;
 	invoice.open("invoice.csv");
 
-	//std::string text{ std::istreambuf_iterator<char>(marketData), std::istreambuf_iterator<char>() };
-	//std::string::iterator first = text.begin();
-	//std::string::iterator last = text.end();
-
 	if (marketData.fail())
+	{
+		std::cout << "File could not be opened, it may not exist yet or may be open";
+		return;
+	}
+	if (invoice.fail())
 	{
 		std::cout << "File could not be opened, it may not exist yet or may be open";
 		return;
 	}
 
 	CSVRow row;
+
 	while (!marketData.eof())
 	{
 		while (marketData >> row)
@@ -280,10 +284,178 @@ void makeInvoice()
 		}
 		invoice << "," << "," << "," << "," << "Total:"<<totalAmount << std::endl;
 	}
-	//TODO: make the file find all lines where the buyers number is present 
-	//copy only that data to a new file
-	// calculate Total and Prices
 	invoice.close();
+	marketData.close();
+}
+
+void makeSellerInvoice()
+{
+	double price = 0;
+	double totalAmount = 0;
+
+	std::string sellerNumber;
+	std::cout << "What is the seller number" << std::endl;
+	std::cin >> sellerNumber;
+
+	std::ifstream marketData;
+	marketData.open("marketdata.csv");
+
+	std::ofstream sellerInvoice;
+	sellerInvoice.open("invoice.csv");
+
+	if (marketData.fail())
+	{
+		std::cout << "File could not be opened, it may not exist yet or may be open";
+		return;
+	}
+	if (sellerInvoice.fail())
+	{
+		std::cout << "File could not be opened, it may not exist yet or may be open";
+		return;
+	}
+
+	CSVRow row;
+
+	while (!marketData.eof())
+	{
+		while (marketData >> row)
+		{
+			//sort for seller number
+			if (row[4] == sellerNumber)
+
+			{
+				price = stod(row[1])*stod(row[2]);
+				totalAmount += price;
+				sellerInvoice << row[0] << "," << row[1] << "," << row[2] << "," << "$:" << price << "," << std::endl;
+			}
+		}
+		sellerInvoice << "," << "," << "," << "Total:" << totalAmount << std::endl;
+	}
+	sellerInvoice.close();
+	marketData.close();
+
+}
+
+double processQuantity(CSVRow row,  double quantity)
+{
+	// row[1]=quantity;
+	quantity =+ stod(row[1]); // converts to double
+	
+		return quantity;
+}
+
+double processHighPrice(CSVRow row, double highPrice)
+{
+	if (stod(row[2]) > highPrice)
+		return stod(row[2]);
+	else
+		return highPrice;
+}
+double processLowPrice(CSVRow row, double lowPrice)
+{
+	if (stod(row[2]) < lowPrice)
+		return stod(row[2]);
+	else
+		return lowPrice;
+}
+
+double processAverage(CSVRow row, double average)
+{
+	return 1;
+}
+
+double processTotal(CSVRow row, double totalPrice)
+{
+	totalPrice += stod(row[1]) * stod(row[2]);
+	return totalPrice;
+}
+
+void generateMarketReport()
+{
+	std::string crop;
+	double price; // price of 1 lot.
+	double totalPrice; // used to find average total price / quantity = average
+	double averagePrice = 0;
+	double quantity = 0; 
+	double highPrice = 0;
+	double lowPrice = 100; // arbitrary number
+
+	std::ifstream marketData;
+	marketData.open("marketdata.csv");
+
+	std::ofstream marketReport;
+	marketReport.open("marketReport.csv");
+	if (marketReport.fail())
+	{
+		std::cout << "File could not be opened, it may not exist yet or may be open";
+		return;
+	}
+
+	CSVRow row;
+
+	while (!marketData.eof())
+	{
+		while (marketData >> row)
+		{
+			if (row[0] == "tom")
+
+			{
+			 quantity = processQuantity(row, quantity);
+			 highPrice = processHighPrice(row, highPrice);
+			 lowPrice = processLowPrice(row, lowPrice);
+			 totalPrice = processTotal(row, totalPrice);
+
+			}
+
+			marketData.clear();
+			marketData.seekg(0, std::ios::beg);
+			
+			
+			else if (row[0] == "zuc")
+			{
+
+
+			}
+
+
+			else if (row[0] == "cant")
+			{
+
+
+			}
+
+			else if (row[0] == "watermelon")
+			{
+
+
+
+			}
+
+			else if (row[0] == "cuc")
+			{
+
+			}
+			else if (row[0] == "grape tom")
+			{
+
+			}
+			else if (row[0] == "yellow squash")
+			{
+
+			}
+			else if (row[0] == "cabbage")
+			{
+
+			}
+			else if (row[0] == "pumpkins")
+
+			{
+
+
+			}
+		}
+	}
+	marketReport.close();
 	marketData.close();
 }
 
@@ -295,11 +467,13 @@ int main()
 
 	while (choice[0] != 'q')
 	{
-		std::cout << "|----------Menu---------------|" << std::endl;
+		std::cout << "|----------Menu-----------------|" << std::endl;
 		std::cout << "|----------Add (B)uyer----------|" << std::endl;
 		std::cout << "|----------Add (S)eller---------|" << std::endl;
 		std::cout << "|----------Add (C)rop-----------|" << std::endl;
-		std::cout << "|----------Create (I)nvoice-----|" << std::endl;
+		std::cout << "|--------Create Buyer(I)nvoice--|" << std::endl;
+		std::cout << "|------Create Seller(R)invoice--|" << std::endl;
+		std::cout << "|-----Create (M)arket Report----|" << std::endl;
 
 		std::cin >> choice[0];
 
@@ -308,8 +482,9 @@ int main()
 		case 'B': addBuyer(); break;
 		case 'S': addSeller(); break;
 		case 'C': addCrop(); break;
-		case 'I': makeInvoice(); break;
-			// todo make sellerinvoice
+		case 'I': makeBuyerInvoice(); break;
+		case 'R': makeSellerInvoice(); break;
+		//case 'M': markertReport(); break;
 			//TODO Generate market Report
 
 		}
