@@ -119,6 +119,7 @@ std::istream& operator >> (std::istream& str, CSVRow& data)
 	data.readNextRow(str);
 	return str;
 }
+
 // adds buyers to buyer file with their info
 void addBuyer()
 {
@@ -336,22 +337,22 @@ void makeSellerInvoice()
 
 }
 
-double processQuantity(CSVRow row,  double quantity)
+double  processQuantity(CSVRow row,  double  quantity)
 {
 	// row[1]=quantity;
-	quantity =+ stod(row[1]); // converts to double
-	
+	quantity += stod(row[1]); // converts to double
 		return quantity;
 }
 
-double processHighPrice(CSVRow row, double highPrice)
+double processHighPrice(CSVRow row, double & highPrice)
 {
 	if (stod(row[2]) > highPrice)
 		return stod(row[2]);
 	else
 		return highPrice;
 }
-double processLowPrice(CSVRow row, double lowPrice)
+
+double processLowPrice(CSVRow row, double & lowPrice)
 {
 	if (stod(row[2]) < lowPrice)
 		return stod(row[2]);
@@ -359,32 +360,39 @@ double processLowPrice(CSVRow row, double lowPrice)
 		return lowPrice;
 }
 
-double processAverage(CSVRow row, double average)
+double processAverage(CSVRow row, double & total, double & quantity)
 {
-	return 1;
+	return total / quantity;
 }
 
-double processTotal(CSVRow row, double totalPrice)
+double processTotal(CSVRow row, double & totalPrice)
 {
 	totalPrice += stod(row[1]) * stod(row[2]);
 	return totalPrice;
 }
-
+void resetValues(double & value)
+{
+	value = 0;
+}
 void generateMarketReport()
 {
-	std::string crop;
-	double price; // price of 1 lot.
-	double totalPrice; // used to find average total price / quantity = average
+	// variables
+	double totalPrice=0; // used to find average total price / quantity = average
 	double averagePrice = 0;
 	double quantity = 0; 
 	double highPrice = 0;
 	double lowPrice = 100; // arbitrary number
+	std::string crops[] = { "tom","zuc","cant","waterm","cuc","grape tom","cab","ys","pumpkin" };
 
 	std::ifstream marketData;
 	marketData.open("marketdata.csv");
 
 	std::ofstream marketReport;
 	marketReport.open("marketReport.csv");
+
+	// titles
+	marketReport << "Crop" << "," << "Quantity" << "," << "High Price"<< "," << "Low Price" << "," << "Average Price" << "," << std::endl;
+
 	if (marketReport.fail())
 	{
 		std::cout << "File could not be opened, it may not exist yet or may be open";
@@ -393,68 +401,54 @@ void generateMarketReport()
 
 	CSVRow row;
 
-	while (!marketData.eof())
-	{
-		while (marketData >> row)
+	//index of number of crops
+	int index = 0;
+	while (index != 9) {
+
+		//reset values
+		double averagePrice = 0;
+		double quantity = 0;
+		double highPrice = 0;
+		double lowPrice = 100;
+
+		while (!marketData.eof())
 		{
-			if (row[0] == "tom")
-
+			while (marketData >> row)
 			{
-			 quantity = processQuantity(row, quantity);
-			 highPrice = processHighPrice(row, highPrice);
-			 lowPrice = processLowPrice(row, lowPrice);
-			 totalPrice = processTotal(row, totalPrice);
-
-			}
-
-			marketData.clear();
-			marketData.seekg(0, std::ios::beg);
-			
-			
-			else if (row[0] == "zuc")
-			{
-
-
-			}
-
-
-			else if (row[0] == "cant")
-			{
-
-
-			}
-
-			else if (row[0] == "watermelon")
-			{
-
-
-
-			}
-
-			else if (row[0] == "cuc")
-			{
-
-			}
-			else if (row[0] == "grape tom")
-			{
-
-			}
-			else if (row[0] == "yellow squash")
-			{
-
-			}
-			else if (row[0] == "cabbage")
-			{
-
-			}
-			else if (row[0] == "pumpkins")
-
-			{
-
+				if (row[0] == crops[index])
+				{
+					quantity = processQuantity(row, quantity);
+					highPrice = processHighPrice(row, highPrice);
+					lowPrice = processLowPrice(row, lowPrice);
+					totalPrice = processTotal(row, totalPrice);
+					//averagePrice = processAverage(row, totalPrice, quantity);
+				}
 
 			}
 		}
+		// clean up // must have atleast 1 item for low price
+		averagePrice = processAverage(row, totalPrice, quantity);
+		if (quantity == 0)
+		{
+			lowPrice = 0;
+			averagePrice = 0;
+		}
+		marketReport << crops[index] << ","<<  quantity << "," << highPrice << "," << lowPrice << "," << averagePrice << "," << std::endl;
+
+		//tests
+		//std::cout << quantity << std::endl;
+		//std::cout << lowPrice << std::endl;
+		//std::cout << highPrice << std::endl;
+		//std::cout << averagePrice << std::endl;
+
+
+		// back to the top of the file
+		marketData.clear();
+		marketData.seekg(0, std::ios::beg);
+		++index;
+
 	}
+
 	marketReport.close();
 	marketData.close();
 }
@@ -465,7 +459,7 @@ int main()
 	char choice[10];
 
 
-	while (choice[0] != 'q')
+	while (choice[0] != 'Q')
 	{
 		std::cout << "|----------Menu-----------------|" << std::endl;
 		std::cout << "|----------Add (B)uyer----------|" << std::endl;
@@ -484,7 +478,7 @@ int main()
 		case 'C': addCrop(); break;
 		case 'I': makeBuyerInvoice(); break;
 		case 'R': makeSellerInvoice(); break;
-		//case 'M': markertReport(); break;
+		case 'M': generateMarketReport(); break;
 			//TODO Generate market Report
 
 		}
