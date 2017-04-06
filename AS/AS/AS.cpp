@@ -11,12 +11,7 @@
 
 
 
-//Globals: 
 
-//std::string personName;
-//std::string address;
-//std::string auctionNumber;
-//std::string phoneNumber;
 class person
 {
 public:
@@ -34,6 +29,10 @@ public:
 	std::string getAuctionNumber() { return auctionNumber; }
 	std::string getPhoneNumber() { return phoneNumber; }
 
+	void addBuyer();
+	void addSeller();
+	void makeBuyerInvoice();
+	void makeSellerInvoice();
 
 private:
 
@@ -44,7 +43,7 @@ private:
 
 };
 //Global
-person * P;
+//person * P;
 
 class product
 {
@@ -67,6 +66,7 @@ public:
 	std::string getSellerNumber() { return sellerNumber; }
 	std::string getBuyerNumber() { return buyerNumber; }
 
+	void addCrop();
 private:
 
 	double price;
@@ -77,8 +77,9 @@ private:
 
 };
 //Global
-product * Prod;
+//product * Prod;
 
+//parser
 class CSVRow
 {
 public:
@@ -121,8 +122,9 @@ std::istream& operator >> (std::istream& str, CSVRow& data)
 }
 
 // adds buyers to buyer file with their info
-void addBuyer()
+void person::addBuyer()
 {
+	person * P;
 	P = new person();
 	std::string temp;
 
@@ -159,10 +161,13 @@ void addBuyer()
 	buyers.close();
 
 	return;
+	delete P;
 }
+
 // adds seller to file with their info
-void addSeller()
+void person::addSeller()
 {
+	person * P;
 	char comma = ',';
 	P = new person();
 	std::string temp;
@@ -198,12 +203,13 @@ void addSeller()
 	sellers << P->getPersonName() << "," << P->getAddress() << "," << P->getAuctionNumber() << "," << P->getPhoneNumber() << std::endl;
 
 	sellers.close();
-	return; // 
+	delete P;
 }
-// used to add information to market file
-void addCrop()
-{
 
+// used to add information to market file
+void product::addCrop()
+{
+	product * Prod;
 	Prod = new product();
 	std::string temp; // string of item sold
 	double tempDouble; // used for price and quantity
@@ -240,9 +246,10 @@ void addCrop()
 	marketData << Prod->getCropType() << "," << Prod->getQuantity() << "," << Prod->getPrice() << "," << Prod->getBuyerNumber() << "," << Prod->getSellerNumber() << "," << std::endl;
 
 	marketData.close();
+	delete Prod;
 }
 
-void makeBuyerInvoice()
+void person::makeBuyerInvoice()
 {
 	double price = 0;
 	double totalAmount = 0;
@@ -255,7 +262,7 @@ void makeBuyerInvoice()
 	marketData.open("marketdata.csv");
 
 	std::ofstream invoice;
-	invoice.open("invoice.csv");
+	invoice.open("buyerinvoice.csv");
 
 	if (marketData.fail())
 	{
@@ -289,7 +296,7 @@ void makeBuyerInvoice()
 	marketData.close();
 }
 
-void makeSellerInvoice()
+void person::makeSellerInvoice()
 {
 	double price = 0;
 	double totalAmount = 0;
@@ -302,7 +309,7 @@ void makeSellerInvoice()
 	marketData.open("marketdata.csv");
 
 	std::ofstream sellerInvoice;
-	sellerInvoice.open("invoice.csv");
+	sellerInvoice.open("sellerinvoice.csv");
 
 	if (marketData.fail())
 	{
@@ -337,7 +344,7 @@ void makeSellerInvoice()
 
 }
 
-double  processQuantity(CSVRow row,  double  quantity)
+double  processQuantity(CSVRow row,  double & quantity)
 {
 	// row[1]=quantity;
 	quantity += stod(row[1]); // converts to double
@@ -370,10 +377,7 @@ double processTotal(CSVRow row, double & totalPrice)
 	totalPrice += stod(row[1]) * stod(row[2]);
 	return totalPrice;
 }
-void resetValues(double & value)
-{
-	value = 0;
-}
+
 void generateMarketReport()
 {
 	// variables
@@ -402,6 +406,8 @@ void generateMarketReport()
 	CSVRow row;
 
 	//index of number of crops
+	//must be changed if crops change 
+	//could use size function here
 	int index = 0;
 	while (index != 9) {
 
@@ -426,6 +432,7 @@ void generateMarketReport()
 
 			}
 		}
+
 		// clean up // must have atleast 1 item for low price
 		averagePrice = processAverage(row, totalPrice, quantity);
 		if (quantity == 0)
@@ -433,6 +440,8 @@ void generateMarketReport()
 			lowPrice = 0;
 			averagePrice = 0;
 		}
+
+		// write to csv
 		marketReport << crops[index] << ","<<  quantity << "," << highPrice << "," << lowPrice << "," << averagePrice << "," << std::endl;
 
 		//tests
@@ -455,7 +464,8 @@ void generateMarketReport()
 
 int main()
 {
-
+	person per;
+	product prod;
 	char choice[10];
 
 
@@ -473,13 +483,12 @@ int main()
 
 		switch (choice[0])
 		{
-		case 'B': addBuyer(); break;
-		case 'S': addSeller(); break;
-		case 'C': addCrop(); break;
-		case 'I': makeBuyerInvoice(); break;
-		case 'R': makeSellerInvoice(); break;
+		case 'B': per.addBuyer(); break;
+		case 'S': per.addSeller(); break;
+		case 'C': prod.addCrop(); break;
+		case 'I': per.makeBuyerInvoice(); break;
+		case 'R': per.makeSellerInvoice(); break;
 		case 'M': generateMarketReport(); break;
-			//TODO Generate market Report
 
 		}
 	}
