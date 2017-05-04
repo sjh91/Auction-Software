@@ -2,12 +2,19 @@
 //Sam Hardy
 //sjh91@zips.uakron.edu;
 
+
+
+
+
 #include "stdafx.h"
 #include <string>
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <vector>
+
+
+
 
 
 
@@ -131,6 +138,7 @@ public:
 	void makeBuyerInvoice();
 	void makeSellerInvoice();
 	
+	//void deleteProd(); This will need every product to have a number/code assigned to it. 
 	//void checkPaid();
 };
 
@@ -257,6 +265,7 @@ void product::addCrop()
 	std::cin >> temp;
 	Prod->setBuyerNumber(temp);
 
+	//write to file
 	marketData << Prod->getCropType() << "," << Prod->getQuantity() << "," << Prod->getPrice() << "," << Prod->getBuyerNumber() << "," << Prod->getSellerNumber() << "," << std::endl;
 
 	marketData.close();
@@ -495,7 +504,7 @@ int main()
 		std::cout << "|--------Create Buyer(I)nvoice--|" << std::endl;
 		std::cout << "|------Create Seller(R)invoice--|" << std::endl;
 		std::cout << "|-----Create (M)arket Report----|" << std::endl;
-		std::cout << "|------Check Paid---------------|" << std::endl;
+		std::cout << "|------(Q)uit-------------------|" << std::endl;
 
 		std::cin >> choice[0];
 
