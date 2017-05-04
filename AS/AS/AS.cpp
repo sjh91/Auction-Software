@@ -50,8 +50,7 @@ private:
 };
 
 
-//Global
-//person * P;
+
 
 class product
 {
@@ -84,11 +83,11 @@ private:
 	std::string buyerNumber;
 
 };
-//Global
-//product * Prod;
+
+
 
 //parser
-class CSVRow
+class csvRow
 {
 public:
 	std::string const& operator[](std::size_t index) const
@@ -124,11 +123,13 @@ private:
 	std::vector<std::string>    m_data;
 };
 
-std::istream& operator >> (std::istream& str, CSVRow& data)
+
+std::istream& operator >> (std::istream& str, csvRow& data)
 {	
 	data.readNextRow(str);
 	return str;
 }
+
 
 //double inheritance
 class operation: public person, public product 
@@ -141,6 +142,7 @@ public:
 	//void deleteProd(); This will need every product to have a number/code assigned to it. 
 	//void checkPaid();
 };
+
 
 // adds buyers to buyer file with their info
 void person::addBuyer()
@@ -185,6 +187,7 @@ void person::addBuyer()
 	delete P;
 }
 
+
 // adds seller to file with their info
 void person::addSeller()
 {
@@ -226,6 +229,7 @@ void person::addSeller()
 	sellers.close();
 	delete P;
 }
+
 
 // used to add information to market file
 void product::addCrop()
@@ -272,6 +276,7 @@ void product::addCrop()
 	delete Prod;
 }
 
+
 void operation::makeBuyerInvoice()
 {
 	double price = 0;
@@ -298,7 +303,7 @@ void operation::makeBuyerInvoice()
 		return;
 	}
 
-	CSVRow row;
+	csvRow row;
 
 	while (!marketData.eof())
 	{
@@ -318,6 +323,7 @@ void operation::makeBuyerInvoice()
 	invoice.close();
 	marketData.close();
 }
+
 
 void operation::makeSellerInvoice()
 {
@@ -346,7 +352,7 @@ void operation::makeSellerInvoice()
 		return;
 	}
 
-	CSVRow row;
+	csvRow row;
 
 	while (!marketData.eof())
 	{
@@ -368,14 +374,16 @@ void operation::makeSellerInvoice()
 
 }
 
-double  processQuantity(CSVRow row,  double & quantity)
+
+double  processQuantity(csvRow row,  double & quantity)
 {
 	// row[1]=quantity;
 	quantity += stod(row[1]); // converts to double
 		return quantity;
 }
 
-double processHighPrice(CSVRow row, double & highPrice)
+
+double processHighPrice(csvRow row, double & highPrice)
 {
 	if (stod(row[2]) > highPrice)
 		return stod(row[2]);
@@ -383,7 +391,8 @@ double processHighPrice(CSVRow row, double & highPrice)
 		return highPrice;
 }
 
-double processLowPrice(CSVRow row, double & lowPrice)
+
+double processLowPrice(csvRow row, double & lowPrice)
 {
 	if (stod(row[2]) < lowPrice)
 		return stod(row[2]);
@@ -391,16 +400,19 @@ double processLowPrice(CSVRow row, double & lowPrice)
 		return lowPrice;
 }
 
-double processAverage(CSVRow row, double & total, double & quantity)
+
+double processAverage(csvRow row, double & total, double & quantity)
 {
 	return total / quantity;
 }
 
-double processTotal(CSVRow row, double & totalPrice)
+
+double processTotal(csvRow row, double & totalPrice)
 {
 	totalPrice += stod(row[1]) * stod(row[2]);
 	return totalPrice;
 }
+
 
 //generates market report, finds quantities, averages, highs and lows, stores in csv file.
 void generateMarketReport()
@@ -428,7 +440,7 @@ void generateMarketReport()
 		return;
 	}
 
-	CSVRow row;
+	csvRow row;
 
 	//index of number of crops
 	//must be changed if crops change 
@@ -486,6 +498,8 @@ void generateMarketReport()
 	marketReport.close();
 	marketData.close();
 }
+
+
 
 int main()
 {
