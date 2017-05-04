@@ -31,8 +31,7 @@ public:
 
 	void addBuyer();
 	void addSeller();
-	void makeBuyerInvoice();
-	void makeSellerInvoice();
+	
 
 private:
 
@@ -42,6 +41,8 @@ private:
 	std::string phoneNumber;
 
 };
+
+
 //Global
 //person * P;
 
@@ -111,6 +112,7 @@ public:
 			m_data.push_back("");
 		}
 	}
+
 private:
 	std::vector<std::string>    m_data;
 };
@@ -120,6 +122,17 @@ std::istream& operator >> (std::istream& str, CSVRow& data)
 	data.readNextRow(str);
 	return str;
 }
+
+//double inheritance
+class operation: public person, public product 
+{
+public:
+	//functions 
+	void makeBuyerInvoice();
+	void makeSellerInvoice();
+	
+	//void checkPaid();
+};
 
 // adds buyers to buyer file with their info
 void person::addBuyer()
@@ -168,7 +181,7 @@ void person::addBuyer()
 void person::addSeller()
 {
 	person * P;
-	char comma = ',';
+
 	P = new person();
 	std::string temp;
 
@@ -211,6 +224,7 @@ void product::addCrop()
 {
 	product * Prod;
 	Prod = new product();
+
 	std::string temp; // string of item sold
 	double tempDouble; // used for price and quantity
 
@@ -249,7 +263,7 @@ void product::addCrop()
 	delete Prod;
 }
 
-void person::makeBuyerInvoice()
+void operation::makeBuyerInvoice()
 {
 	double price = 0;
 	double totalAmount = 0;
@@ -296,10 +310,11 @@ void person::makeBuyerInvoice()
 	marketData.close();
 }
 
-void person::makeSellerInvoice()
+void operation::makeSellerInvoice()
 {
 	double price = 0;
 	double totalAmount = 0;
+	
 
 	std::string sellerNumber;
 	std::cout << "What is the seller number" << std::endl;
@@ -378,6 +393,7 @@ double processTotal(CSVRow row, double & totalPrice)
 	return totalPrice;
 }
 
+//generates market report, finds quantities, averages, highs and lows, stores in csv file.
 void generateMarketReport()
 {
 	// variables
@@ -466,6 +482,7 @@ int main()
 {
 	person per;
 	product prod;
+	operation operation;
 	char choice[10];
 
 
@@ -478,6 +495,7 @@ int main()
 		std::cout << "|--------Create Buyer(I)nvoice--|" << std::endl;
 		std::cout << "|------Create Seller(R)invoice--|" << std::endl;
 		std::cout << "|-----Create (M)arket Report----|" << std::endl;
+		std::cout << "|------Check Paid---------------|" << std::endl;
 
 		std::cin >> choice[0];
 
@@ -486,10 +504,10 @@ int main()
 		case 'B': per.addBuyer(); break;
 		case 'S': per.addSeller(); break;
 		case 'C': prod.addCrop(); break;
-		case 'I': per.makeBuyerInvoice(); break;
-		case 'R': per.makeSellerInvoice(); break;
+		case 'I': operation.makeBuyerInvoice(); break;
+		case 'R': operation.makeSellerInvoice(); break;
 		case 'M': generateMarketReport(); break;
-
+		case 'Q': return 0; break;
 		}
 	}
 	return 0;
